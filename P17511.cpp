@@ -4,7 +4,7 @@ using namespace std;
 const int MAXN = 200005, MAXM = 400005;
 int n;
 long long s[MAXN], t[MAXN];
-int head[MAXN], nxt[MAXM], to[MAXM], weight[MAXM];
+int head[MAXN], nxt[MAXM], to[MAXM];
 int toDeg[MAXN], parent[MAXN], parentW[MAXN];
 int idx = 0;
 
@@ -13,7 +13,6 @@ void add(int u, int v, int c) {
     parentW[v] = c;
     to[++idx] = v;
     nxt[idx] = head[u];
-    weight[idx] = c;
     head[u] = idx;
 }
 
@@ -27,7 +26,6 @@ long long topoSort() {
         int v = q.front();
         q.pop();
         int u = parent[v];
-
         if (s[v] != t[v]) {
             long long diff = s[v] - t[v];
             int w = parentW[v];
