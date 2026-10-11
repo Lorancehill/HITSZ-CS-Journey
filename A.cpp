@@ -1,86 +1,42 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include<bits/stdc++.h>
+using namespace std;
 
-typedef struct Node{
-    int data;
-    struct Node* next;
-}Node;
-
-Node* createList(int arr[], int n){
-    Node *head = NULL, *tail = NULL;
-    for (int i = 0; i < n ; i++){
-        Node* newNode = (Node*)malloc(sizeof(Node));
-        newNode -> data = arr[i];
-        newNode -> next = NULL;
-        if (head == NULL){
-            head = newNode;
-            tail = newNode;
+int L, n, m;
+int a[50005];
+bool check(int mid){
+    int cnt = 0;
+    int last = 0;
+    for (int i = 1; i <= n; i++){
+        if (a[i] - last < mid){
+            cnt++;
         }
         else{
-            tail -> next = newNode;
-            tail = newNode;
+            last = a[i];
         }
     }
-    return head;
+    if (L -last < mid){
+        cnt++;
+    }
+    return cnt <= m;
 }
 
-void printList(Node* head){
-    Node* p = head;
-    while (p != NULL){
-        printf("%d ->", p ->data);
-        p = p -> next;
+int main(){
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    cin >> L >> n >> m;
+     int l = 1, r = L;
+    for (int i = 1; i <= n; i++){
+        cin >> a[i];
     }
-    printf("NULL\n");
-}
-
-void deleteNode (Node** head, int val){
-    Node* current = *head, *prev = NULL;
-    if (current != NULL && current -> data == val){
-        *head = current -> next;
-        free(current);
-        return;
-    }
-    while (current != NULL && current -> data != val){
-        prev = current;
-        current = current -> next;
-
-    }
-    if (current == NULL) return;
-    prev -> next = current -> next;
-    free(current);
-}
-
-void saveToFile(Node* head, const char* filename){
-    FILE* fp = fopen(filename, "wb");
-    if (fp == NULL) return;
-
-    Node* p = head;
-    while (p != NULL){
-        fwrite(&(p -> data), sizeof(int), 1, fp);
-        p = p -> next;
-    }
-    fclose(fp);
-}
-
-Node* loadFromFile(const char* filename){
-    FILE* fp = fopen(filename, "rb");
-    if (fp == NULL) return NULL;
-    Node *head = NULL, *tail = NULL;
-    int tempData;
-    while(fread(&tempData,sizeof(int), i, fp) == 1){
-        Node* newNode = (Node*)malloc(sizeof(Node));
-        newNode -> data = tempData;
-        newNode -> next = NULL;
-        if (head == NULL){
-            head = newNode;
-            tail = newNode;
+    while (l < r){
+        int mid = l + (r - l + 1) / 2;
+        if (check(mid)){
+            l = mid;
         }
         else{
-            tail -> next = newNode;
-            tail = newNode;
+            r = mid - 1;
         }
     }
-    fclose(filename);
-    return head;
+    cout << l << endl;
+    return 0;
 }
